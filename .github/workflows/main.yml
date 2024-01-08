@@ -104,7 +104,7 @@ jobs:
         with:
           artifacts: src/godot-nir-${{ steps.get-version.outputs.version }}.zip
           tag: ${{ steps.get-version.outputs.version }}
-          commit: ${{ GITHUB_SHA }}
+          commit: ${{ github.sha }}
           replacesArtifacts: true
           allowUpdates: true
           draft: true
