@@ -17,9 +17,18 @@ jobs:
         include:
           - name: scarlett
             sconsflags: defines=_GAMING_XBOX_SCARLETT extra_suffix=scarlett
+            build: 1
+            archive: bin/*.lib
 
           - name: gdk
             sconsflags: extra_suffix=gdk
+            build: 1
+            archive: bin/*.lib
+
+          - name: source
+            sconsflags:
+            build: 0
+            archive: godot-mesa
 
     steps:
       - uses: actions/checkout@v4
@@ -31,19 +40,20 @@ jobs:
 
       - shell: bash
         working-directory: godot-nir-static
-        run: |
-          ./update_mesa.sh
+        run: ./update_mesa.sh
         env:
           PYTHONPYCACHEPREFIX: ${{ github.workspace }}/build/__pycache__
 
       - name: Compilation
+        if: ${{ matrix.build == 1 }}
         uses: ./.github/actions/build-mesa
         with:
           sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+          working-directory: godot-nir-static
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.cache-name }}
-          path: build/*.lib
+          path: godot-nir-static/${{ matrix.archive }}
           retention-days: 14
