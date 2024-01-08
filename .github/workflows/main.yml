@@ -77,7 +77,7 @@ jobs:
       - id: get-version
         shell: bash
         run: |
-          version=$(cat src/godot-mesa/VERSION.info)
+          version=$(cat src/godot-mesa/VERSION.info|head -n1|tr -d \\n|tr -d \\r)
           echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Upload
