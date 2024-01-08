@@ -65,8 +65,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: build-*
+          pattern: build-*
           path: src/bin
+          merge-multiple: true
 
       - uses: actions/download-artifact@v2
         with:
