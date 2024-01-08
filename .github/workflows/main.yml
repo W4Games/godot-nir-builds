@@ -29,9 +29,10 @@ jobs:
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
 
-      - shell: sh
+      - shell: bash
         working-directory: godot-nir-static
-        run: update-mesa.sh
+        run: |
+          ./update_mesa.sh
         env:
           PYTHONPYCACHEPREFIX: ${{ github.workspace }}/build/__pycache__
 
