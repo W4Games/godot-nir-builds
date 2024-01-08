@@ -20,8 +20,18 @@ jobs:
             build: 1
             archive: bin/*.lib
 
-          - name: build-gdk
-            sconsflags: extra_suffix=gdk
+          - name: build-x86
+            sconsflags: arch=x86_32
+            build: 1
+            archive: bin/*.lib
+
+          - name: build-x64
+            sconsflags: arch=x86_64
+            build: 1
+            archive: bin/*.lib
+
+          - name: build-arm64
+            sconsflags: arch=arm64
             build: 1
             archive: bin/*.lib
 
