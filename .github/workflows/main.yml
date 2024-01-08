@@ -37,7 +37,7 @@ jobs:
           PYTHONPYCACHEPREFIX: ${{ github.workspace }}/build/__pycache__
 
       - name: Compilation
-        uses: ./.github/actions/build
+        uses: ./.github/actions/build-mesa
         with:
           sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
 

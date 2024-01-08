@@ -1,0 +1,16 @@
+name: Build
+description: Build mesa
+inputs:
+  sconsflags:
+    default: ""
+runs:
+  using: "composite"
+  steps:
+    - name: Scons Build
+      shell: sh
+      env:
+          SCONSFLAGS: ${{ inputs.sconsflags }}
+      run: |
+        echo "Building with flags:" ${{ env.SCONSFLAGS }}
+        rm -rf build
+        scons ${{ env.SCONSFLAGS }}
