@@ -73,6 +73,8 @@ jobs:
   archive:
     needs: [build]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/download-artifact@v4
@@ -92,9 +94,18 @@ jobs:
           version=$(cat src/godot-mesa/VERSION.info|head -n1|tr -d \\n|tr -d \\r)
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Upload
-        uses: actions/upload-artifact@v3
+      - uses: thedoctor0/zip-release@0.7.6
         with:
-          name: godot-nir-${{ steps.get-version.outputs.version }}
-          path: src/
-          retention-days: 1
+          type: 'zip'
+          filename: godot-nir-${{ steps.get-version.outputs.version }}.zip
+          directory: src/
+
+      - uses: ncipollo/release-action@v1.13.0
+        with:
+          artifacts: src/godot-nir-${{ steps.get-version.outputs.version }}.zip
+          tag: ${{ steps.get-version.outputs.version }}
+          commit: ${{ GITHUB_SHA }}
+          replacesArtifacts: true
+          allowUpdates: true
+          draft: true
+          makeLatest: true
