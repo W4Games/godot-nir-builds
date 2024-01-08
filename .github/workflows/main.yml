@@ -54,6 +54,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.cache-name }}
+          name: ${{ matrix.name }}
           path: godot-nir-static/${{ matrix.archive }}
           retention-days: 14
