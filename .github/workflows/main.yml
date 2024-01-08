@@ -26,8 +26,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup python and scons
-        uses: ./.github/actions/godot-deps
+      - name: Setup dependencies
+        uses: ./.github/actions/deps
 
       - shell: bash
         working-directory: godot-nir-static
