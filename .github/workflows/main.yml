@@ -15,12 +15,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: scarlett
+          - name: build-scarlett
             sconsflags: defines=_GAMING_XBOX_SCARLETT extra_suffix=scarlett
             build: 1
             archive: bin/*.lib
 
-          - name: gdk
+          - name: build-gdk
             sconsflags: extra_suffix=gdk
             build: 1
             archive: bin/*.lib
@@ -56,4 +56,32 @@ jobs:
         with:
           name: ${{ matrix.name }}
           path: godot-nir-static/${{ matrix.archive }}
-          retention-days: 14
+          retention-days: 1
+
+  archive:
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-*
+          path: src/bin
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: source.zip
+          path: src/godot-mesa
+
+      - id: get-version
+        shell: bash
+        run: |
+          version=$(cat src/godot-mesa/VERSION.info)
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: godot-nir-${{ steps.get-version.outputs.version }}.zip
+          path: src/
+          retention-days: 1
