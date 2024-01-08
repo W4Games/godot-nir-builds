@@ -40,7 +40,9 @@ jobs:
 
       - shell: bash
         working-directory: godot-nir-static
-        run: ./update_mesa.sh
+        run: |
+          rm -f godot-mesa/bin/git_sha1.h
+          ./update_mesa.sh
         env:
           PYTHONPYCACHEPREFIX: ${{ github.workspace }}/build/__pycache__
 
@@ -83,6 +85,6 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: godot-nir-${{ steps.get-version.outputs.version }}.zip
+          name: godot-nir-${{ steps.get-version.outputs.version }}
           path: src/
           retention-days: 1
