@@ -52,7 +52,7 @@ jobs:
           working-directory: godot-nir-static
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}
           path: godot-nir-static/${{ matrix.archive }}
