@@ -1,0 +1,48 @@
+name: Build and package
+on:
+  workflow_dispatch:
+
+# Global Settings
+env:
+  SCONSFLAGS: 
+  SCONS_CACHE_MSVC_CONFIG: true
+
+jobs:
+  build:
+    runs-on: "windows-latest"
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: scarlett
+            sconsflags: defines=_GAMING_XBOX_SCARLETT extra_suffix=scarlett
+
+          - name: gdk
+            sconsflags: extra_suffix=gdk
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup python and scons
+        uses: ./.github/actions/godot-deps
+
+      - shell: sh
+        working-directory: godot-nir-static
+        run: update-mesa.sh
+        env:
+          PYTHONPYCACHEPREFIX: ${{ github.workspace }}/build/__pycache__
+
+      - name: Compilation
+        uses: ./.github/actions/build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.cache-name }}
+          path: build/*.lib
+          retention-days: 14
