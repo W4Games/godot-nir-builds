@@ -111,9 +111,9 @@ jobs:
         working-directory: current
         run: |
           height=$(git log --oneline ${{ steps.get-version.outputs.version }}..HEAD 2>/dev/null|wc -l || true)
-          tagname=${version}-${height}
+          tagname=${{ steps.get-version.outputs.version }}-${height}
           if [[ x"$height" == x"0" ]]; then
-            tagname=${version}
+            tagname=${{ steps.get-version.outputs.version }}
           fi
           echo "tagname=$tagname" >> $GITHUB_OUTPUT
 
@@ -130,5 +130,4 @@ jobs:
           artifacts: src/godot-nir-${{ steps.get-tagname.outputs.tagname }}.zip
           tag: ${{ steps.get-tagname.outputs.tagname }}
           commit: ${{ github.sha }}
-          draft: false
           makeLatest: true
