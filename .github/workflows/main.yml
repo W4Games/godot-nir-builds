@@ -59,6 +59,7 @@ jobs:
         working-directory: godot-nir-static
         run: |
           ./update_mesa.sh
+          cp godot-mesa/VERSION.info godot-mesa/VERSION
         env:
           PYTHONPYCACHEPREFIX: ${{ github.workspace }}/build/__pycache__
           MESA_GIT_SHA1_OVERRIDE: ${{ steps.get-mesa-sha1.outputs.sha }}
