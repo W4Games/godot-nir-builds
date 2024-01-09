@@ -48,13 +48,20 @@ jobs:
       - name: Setup dependencies
         uses: ./.github/actions/deps
 
+      - id: get-mesa-sha1
+        shell: bash
+        working-directory: godot-nir-static/mesa
+        run: |
+          val=$(git rev-parse HEAD)
+          echo "sha=$val" >> $GITHUB_OUTPUT
+
       - shell: bash
         working-directory: godot-nir-static
         run: |
-          rm -f godot-mesa/bin/git_sha1.h
           ./update_mesa.sh
         env:
           PYTHONPYCACHEPREFIX: ${{ github.workspace }}/build/__pycache__
+          MESA_GIT_SHA1_OVERRIDE: ${{ steps.get-mesa-sha1.outputs.sha }}
 
       - name: Compilation
         if: ${{ matrix.build == 1 }}
