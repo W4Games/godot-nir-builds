@@ -84,6 +84,11 @@ jobs:
       contents: write
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: current
+
       - uses: actions/download-artifact@v4
         with:
           pattern: build-*
@@ -98,27 +103,32 @@ jobs:
       - id: get-version
         shell: bash
         run: |
-          set -x
           version=$(cat src/godot-mesa/VERSION.info|head -n1|tr -d \\n|tr -d \\r)
-          height=$(git log --oneline $version..HEAD 2>/dev/null|wc -l || true)
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - id: get-tagname
+        shell: bash
+        working-directory: current
+        run: |
+          height=$(git log --oneline ${{ steps.get-version.outputs.version }}..HEAD 2>/dev/null|wc -l || true)
           tagname=${version}-${height}
           if [[ x"$height" == x"0" ]]; then
             tagname=${version}
           fi
           echo "tagname=$tagname" >> $GITHUB_OUTPUT
 
-      - name: Zip ${{ steps.get-version.outputs.tagname }}
+      - name: Zip ${{ steps.get-tagname.outputs.tagname }}
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
-          filename: godot-nir-${{ steps.get-version.outputs.tagname }}.zip
+          filename: godot-nir-${{ steps.get-tagname.outputs.tagname }}.zip
           directory: src/
 
-      - name: Release ${{ steps.get-version.outputs.tagname }}
+      - name: Release ${{ steps.get-tagname.outputs.tagname }}
         uses: ncipollo/release-action@v1.13.0
         with:
-          artifacts: src/godot-nir-${{ steps.get-version.outputs.tagname }}.zip
-          tag: ${{ steps.get-version.outputs.tagname }}
+          artifacts: src/godot-nir-${{ steps.get-tagname.outputs.tagname }}.zip
+          tag: ${{ steps.get-tagname.outputs.tagname }}
           commit: ${{ github.sha }}
           draft: false
           makeLatest: true
