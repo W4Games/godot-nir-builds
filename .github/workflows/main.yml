@@ -16,7 +16,7 @@ jobs:
       matrix:
         include:
           - name: build-scarlett
-            sconsflags: cppdefines=_GAMING_XBOX_SCARLETT extra_suffix=scarlett
+            sconsflags: cppdefines="_GAMING_XBOX_SCARLETT _GAMING_XBOX" extra_suffix=scarlett
             build: 1
             archive: bin/*.lib
 
