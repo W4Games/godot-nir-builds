@@ -1,3 +1,3 @@
 [submodule "godot-nir-static"]
 	path = godot-nir-static
-	url = https://github.com/shana/godot-nir-static
+	url = https://github.com/godotengine/godot-nir-static
