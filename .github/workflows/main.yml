@@ -30,10 +30,13 @@ jobs:
             build: 1
             archive: bin/*.lib
 
-          - name: build-arm64
-            sconsflags: arch=arm64
-            build: 1
-            archive: bin/*.lib
+          # Disable windows arm64, this is failing to build right now
+          # \godot-nir-static\godot-mesa\src\compiler\nir\nir_builder.h(1114) : fatal error C1001: Internal compiler error.
+          # (compiler file 'D:\a\_work\1\s\src\vctools\Compiler\Utc\src\p2\main.c', line 234)
+          # - name: build-arm64
+          #   sconsflags: arch=arm64
+          #   build: 1
+          #   archive: bin/*.lib
 
           - name: source
             sconsflags:
